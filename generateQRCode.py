@@ -32,7 +32,7 @@ def generate_qr_codes(target_company):
 
             for project_id, name in projects:
                 # 1. The URL embedded IN the image is for physical scans
-                base_url = "http://127.0.0.1:5000"
+                base_url = "http://127.0.0.1:5001"
                 scan_url = f"{base_url}/track/{project_id}?source=scan&target={target_company}"
                 
                 # 2. Generate the base QR Code
