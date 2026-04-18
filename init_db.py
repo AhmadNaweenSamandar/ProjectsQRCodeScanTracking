@@ -16,7 +16,12 @@ def initialize_database():
         )
         cur = conn.cursor()
 
-        print("Wiping old tables and creating new UUID architecture...")
+        print("Updating database architecture for click/scan tracking...")
+
+        # 0. Drop old tables for this reset
+        cur.execute('DROP TABLE IF EXISTS scan_events CASCADE;')
+        cur.execute('DROP TABLE IF EXISTS tracking_events CASCADE;')
+        cur.execute('DROP TABLE IF EXISTS projects CASCADE;')
 
 
         # 1. Create the Projects Table (Now with UUID)
@@ -29,18 +34,19 @@ def initialize_database():
             );
         ''')
 
-        # 2. Create the Scan Events Table (Now with UUID)
+        # 2. Create the Unified Tracking Events Table
         cur.execute('''
-            CREATE TABLE scan_events (
+            CREATE TABLE tracking_events (
                 id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                 project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+                interaction_type VARCHAR(10) NOT NULL CHECK (interaction_type IN ('scan', 'click')),
                 target_company VARCHAR(100) DEFAULT 'General',
                 user_agent TEXT,
-                scanned_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+                tracked_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             );
         ''')
 
-        # 3. Seed the database
+        # 3. Seed the database with our initial projects
         # we don't pass an ID anymore. The database generates it!
         cur.execute('''
             INSERT INTO projects (name, destination_url) 
