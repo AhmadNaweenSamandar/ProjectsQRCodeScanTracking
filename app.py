@@ -11,12 +11,8 @@ app = Flask(__name__)
 
 def get_db_connection():
     """Establish a fresh connection to the database for each request."""
-    return psycopg2.connect(
-        host=os.environ.get('DB_HOST', '127.0.0.1'),
-        database=os.environ.get('DB_NAME'),
-        user=os.environ.get('DB_USER'),
-        password=os.environ.get('DB_PASSWORD')
-    )
+    return psycopg2.connect(os.environ.get('DATABASE_URL'))
+    
 
 def is_valid_uuid(val):
     """Utility to prevent server crashes from invalid UUID formats."""

@@ -8,12 +8,7 @@ load_dotenv()
 def initialize_database():
     print("Connecting to PostgreSQL...")
     try:
-        conn = psycopg2.connect(
-            host=os.environ.get('DB_HOST', '127.0.0.1'),
-            database=os.environ.get('DB_NAME'),
-            user=os.environ.get('DB_USER'),
-            password=os.environ.get('DB_PASSWORD')
-        )
+        conn = psycopg2.connect(os.environ.get('DATABASE_URL'))
         cur = conn.cursor()
 
         print("Updating database architecture for click/scan tracking...")
