@@ -8,12 +8,8 @@ from PIL import Image, ImageDraw, ImageFont
 load_dotenv()
 
 def get_db_connection():
-    return psycopg2.connect(
-        host=os.environ.get('DB_HOST', '127.0.0.1'),
-        database=os.environ.get('DB_NAME'),
-        user=os.environ.get('DB_USER'),
-        password=os.environ.get('DB_PASSWORD')
-    )
+    # connection to hosted database on NEON website
+    return psycopg2.connect(os.environ.get('DATABASE_URL'))
 
 def generate_qr_codes(target_company):
     print(f"\n--- Generating targeted QR Codes for: {target_company} ---")
@@ -32,7 +28,7 @@ def generate_qr_codes(target_company):
 
             for project_id, name in projects:
                 # 1. The URL embedded IN the image is for physical scans
-                base_url = "http://127.0.0.1:5001"
+                base_url = "https://qr-tracker-173122346701.us-central1.run.app"
                 scan_url = f"{base_url}/track/{project_id}?source=scan&target={target_company}"
                 
                 # 2. Generate the base QR Code
